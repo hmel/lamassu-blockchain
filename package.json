@@ -4,7 +4,7 @@
   "description": "Lamassu Blockchain module",
   "main": "lib/index.js",
   "scripts": {
-    "test": "tap ./test"
+    "test": "mocha test/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,8 @@
     "url": "https://github.com/gangleri/lamassu-blockchain/issues"
   },
   "devDependencies": {
-    "tap": "~0.4.8"
+    "mocha": "^1.18.2",
+    "chai": "^1.9.1"
   },
   "dependencies": {
     "querystring": "~0.2.0",

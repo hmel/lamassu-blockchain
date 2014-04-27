@@ -8,27 +8,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gangleri/lamassu-blockchain.git"
+    "url": "https://github.com/lamassu/lamassu-blockchain.git"
   },
   "keywords": [
     "Lamassu",
     "Blockchain",
     "Bitcoin"
   ],
-  "author": "Peter Elger (http://nearform.com)",
-  "contributors": [
-    "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)",
-    "Alan Braddley <alan@gangleri.net>"
-  ],
-  "license": "MIT",
+  "author": "Lamassu (https://lamassu.is)",
+  "license": "unlicence",
   "bugs": {
-    "url": "https://github.com/gangleri/lamassu-blockchain/issues"
+    "url": "https://github.com/lamassu/lamassu-blockchain/issues"
   },
   "devDependencies": {
   },
   "dependencies": {
     "async": "~0.2.10",
     "lodash": "~2.4.1",
-    "jsonquest": "joshmh/jsonquest"
+    "jsonquest": "lamassu/jsonquest"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "lamassu-blockchain",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Lamassu Blockchain module",
   "main": "lib/index.js",
   "scripts": {
@@ -20,8 +20,7 @@
   "bugs": {
     "url": "https://github.com/lamassu/lamassu-blockchain/issues"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "async": "~0.2.10",
     "lodash": "~2.4.1",

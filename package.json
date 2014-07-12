@@ -20,10 +20,12 @@
   "bugs": {
     "url": "https://github.com/lamassu/lamassu-blockchain/issues"
   },
-  "devDependencies": {},
   "dependencies": {
     "async": "~0.2.10",
     "lodash": "~2.4.1",
     "jsonquest": "lamassu/jsonquest"
+  },
+  "devDependencies": {
+    "tap": "^0.4.11"
   }
 }

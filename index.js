@@ -4,12 +4,13 @@ var _ = require('lodash');
 
 _.merge(exports, require('./config'), true);
 
-// Ticker merhods:
-exports.ticker = require('./lib/ticker').ticker;
+
+// // Ticker merhods:
+// exports.ticker = require('./lib/ticker').ticker;
 
 
-// // Common methods:
-// exports.balance = require('./lib/common').balance;
+// Common methods:
+exports.balance = require('./lib/common').balance;
 
 
 // // Trader methods:
@@ -18,5 +19,5 @@ exports.ticker = require('./lib/ticker').ticker;
 // exports.sell = trader.sell;
 
 
-// // Wallet methods:
-// exports.sendBitcoins = require('./lib/wallet').sendBitcoins;
+// Wallet methods:
+exports.sendBitcoins = require('./lib/wallet').sendBitcoins;

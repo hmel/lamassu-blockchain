@@ -2,9 +2,9 @@
   "name": "lamassu-blockchain",
   "version": "0.1.0",
   "description": "Lamassu Blockchain module",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "tap ./test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -20,12 +20,13 @@
   "bugs": {
     "url": "https://github.com/lamassu/lamassu-blockchain/issues"
   },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
+  },
   "dependencies": {
     "async": "~0.2.10",
-    "lodash": "~2.4.1",
-    "jsonquest": "lamassu/jsonquest"
-  },
-  "devDependencies": {
-    "tap": "^0.4.11"
+    "lodash": "^2.4.1",
+    "wreck": "^3.0.0"
   }
 }

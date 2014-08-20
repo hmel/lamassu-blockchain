@@ -6,15 +6,20 @@ var async       = require('async');
 var _           = require('lodash');
 
 
-// copy relevant convienient constants
-var config          = require('../config');
-var API_ENDPOINT    = config.API_ENDPOINT;
-var NAME            = config.NAME;
-var SATOSHI_FACTOR  = config.SATOSHI_FACTOR;
+exports.NAME = 'Blockchain';
+exports.SUPPORTED_MODULES = ['wallet'];
+var API_ENDPOINT    = 'https://blockchain.info/merchant/';
+
+var SATOSHI_FACTOR  = 1e8;
+
+var config = {};
+
+exports.config = function config(localConfig) {
+  if (localConfig) _.merge(config, localConfig);
+};
 
 
-exports.authRequest = function authRequest(path, data, callback) {
-
+function authRequest(path, data, callback) {
   if (!config.guid || !config.fromAddress || !config.password)
     return callback(new Error('Must provide guid, password and source address to make this API request'));
 
@@ -27,7 +32,7 @@ exports.authRequest = function authRequest(path, data, callback) {
 
   var options = {
     headers: {
-      'User-Agent': 'Mozilla/4.0 (compatible; Lamassu ' + NAME + ' node.js client)',
+      'User-Agent': 'Mozilla/4.0 (compatible; Lamassu ' + exports.NAME + ' node.js client)',
       'Content-Length': data.length
     },
     json: true,
@@ -41,6 +46,32 @@ exports.authRequest = function authRequest(path, data, callback) {
   });
 };
 
+
+exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {
+  var data = {
+    to: address,
+    amount: satoshis
+  };
+
+  authRequest('/payment', data, function(err, response) {
+    if (err) return callback(err);
+
+    if (response.error) {
+      var insufficientFundsRegex = /(^Insufficient Funds Available)|(^No free outputs to spend)/;
+      if (response.error.match(insufficientFundsRegex)) {
+        var e = new Error('Insufficient funds');
+        e.name = 'InsufficientFunds';
+        return callback(e);
+      }
+
+      return callback(new Error(response.error));
+    }
+
+    callback(null, response.tx_hash);
+  });
+};
+
+
 function checkBalance(minConfirmations, callback) {
   var data = null;
 
@@ -53,8 +84,6 @@ function checkBalance(minConfirmations, callback) {
   authRequest('/address_balance', data, callback);
 };
 
-
-// required by either Wallet or Trader
 exports.balance = function balance(callback) {
 
   async.parallel([

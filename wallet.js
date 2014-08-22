@@ -12,22 +12,22 @@ var API_ENDPOINT    = 'https://blockchain.info/merchant/';
 
 var SATOSHI_FACTOR  = 1e8;
 
-var config = {};
+var pluginConfig = {};
 
 exports.config = function config(localConfig) {
-  if (localConfig) _.merge(config, localConfig);
+  if (localConfig) _.merge(pluginConfig, localConfig);
 };
 
 
 function authRequest(path, data, callback) {
-  if (!config.guid || !config.fromAddress || !config.password)
+  if (!pluginConfig.guid || !pluginConfig.fromAddress || !pluginConfig.password)
     return callback(new Error('Must provide guid, password and source address to make this API request'));
 
   data = data || {};
 
   _.merge(data, {
-    password: config.password,
-    from: config.fromAddress
+    password: pluginConfig.password,
+    from: pluginConfig.fromAddress
   });
 
   var options = {
@@ -39,7 +39,7 @@ function authRequest(path, data, callback) {
     payload: querystring.stringify(data)
   };
 
-  var uri = API_ENDPOINT + config.guid + path;
+  var uri = API_ENDPOINT + pluginConfig.guid + path;
 
   Wreck.post(uri, options, function(err, res, payload) {
     callback(err, payload);

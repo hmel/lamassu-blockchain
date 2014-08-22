@@ -26,20 +26,18 @@ function authRequest(path, data, callback) {
   data = data || {};
 
   _.merge(data, {
-    password: pluginConfig.password,
-    from: pluginConfig.fromAddress
+    password: pluginConfig.password
   });
 
   var options = {
     headers: {
       'User-Agent': 'Mozilla/4.0 (compatible; Lamassu ' + exports.NAME + ' node.js client)',
-      'Content-Length': data.length
+      'Content-Type': 'application/json'
     },
-    json: true,
-    payload: querystring.stringify(data)
+    json: true
   };
 
-  var uri = API_ENDPOINT + pluginConfig.guid + path;
+  var uri = API_ENDPOINT + pluginConfig.guid + path + '?' + querystring.stringify(data);
 
   Wreck.post(uri, options, function(err, res, payload) {
     callback(err, payload);
@@ -50,8 +48,12 @@ function authRequest(path, data, callback) {
 exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {
   var data = {
     to: address,
-    amount: satoshis
+    amount: satoshis,
+    from: pluginConfig.fromAddress
   };
+
+  if (fee !== null)
+    data.fee = fee;
 
   authRequest('/payment', data, function(err, response) {
     if (err) return callback(err);
@@ -73,12 +75,12 @@ exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {
 
 
 function checkBalance(minConfirmations, callback) {
-  var data = null;
+  var data = {
+    address: pluginConfig.fromAddress
+  };
 
   if(minConfirmations > 0) {
-    data = {
-      confirmations:minConfirmations
-    };
+    data.confirmations = minConfirmations;
   }
 
   authRequest('/address_balance', data, callback);
@@ -93,9 +95,12 @@ exports.balance = function balance(callback) {
   ], function(err, results) {
     if (err) return callback(err);
 
+    if (results.error)
+      return callback(new Error(results.error));
+
     var unconfirmedDeposits = results[0].total_received - results[1].total_received;
     callback(null, {
-      BTC: Math.round(SATOSHI_FACTOR * parseFloat(results[0].balance - unconfirmedDeposits))
+      BTC: Math.round(parseFloat(results[0].balance - unconfirmedDeposits))
     });
   });
 };

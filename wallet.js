@@ -10,48 +10,49 @@ exports.NAME = 'Blockchain';
 exports.SUPPORTED_MODULES = ['wallet'];
 var API_ENDPOINT    = 'https://blockchain.info/merchant/';
 
-var SATOSHI_FACTOR  = 1e8;
-
-var config = {};
+var pluginConfig = {};
 
 exports.config = function config(localConfig) {
-  if (localConfig) _.merge(config, localConfig);
+  if (localConfig) _.merge(pluginConfig, localConfig);
 };
 
 
 function authRequest(path, data, callback) {
-  if (!config.guid || !config.fromAddress || !config.password)
+  if (!pluginConfig.guid || !pluginConfig.fromAddress || !pluginConfig.password)
     return callback(new Error('Must provide guid, password and source address to make this API request'));
 
   data = data || {};
 
   _.merge(data, {
-    password: config.password,
-    from: config.fromAddress
+    password: pluginConfig.password
   });
 
   var options = {
     headers: {
       'User-Agent': 'Mozilla/4.0 (compatible; Lamassu ' + exports.NAME + ' node.js client)',
-      'Content-Length': data.length
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
     json: true,
     payload: querystring.stringify(data)
   };
 
-  var uri = API_ENDPOINT + config.guid + path;
+  var uri = API_ENDPOINT + pluginConfig.guid + path;
 
   Wreck.post(uri, options, function(err, res, payload) {
     callback(err, payload);
   });
-};
+}
 
 
 exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {
   var data = {
     to: address,
-    amount: satoshis
+    amount: satoshis,
+    from: pluginConfig.fromAddress
   };
+
+  if (fee !== null)
+    data.fee = fee;
 
   authRequest('/payment', data, function(err, response) {
     if (err) return callback(err);
@@ -73,16 +74,23 @@ exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {
 
 
 function checkBalance(minConfirmations, callback) {
-  var data = null;
+  var data = {
+    address: pluginConfig.fromAddress
+  };
 
   if(minConfirmations > 0) {
-    data = {
-      confirmations:minConfirmations
-    };
+    data.confirmations = minConfirmations;
   }
 
-  authRequest('/address_balance', data, callback);
-};
+  authRequest('/address_balance', data, function(err, response) {
+    if (err) return callback(err);
+
+    if (response.error)
+      return callback(new Error(response.error));
+
+    callback(null, response);
+  });
+}
 
 exports.balance = function balance(callback) {
 
@@ -93,9 +101,12 @@ exports.balance = function balance(callback) {
   ], function(err, results) {
     if (err) return callback(err);
 
+    if (results.error)
+      return callback(new Error(results.error));
+
     var unconfirmedDeposits = results[0].total_received - results[1].total_received;
     callback(null, {
-      BTC: Math.round(SATOSHI_FACTOR * parseFloat(results[0].balance - unconfirmedDeposits))
+      BTC: Math.round(parseFloat(results[0].balance - unconfirmedDeposits))
     });
   });
 };

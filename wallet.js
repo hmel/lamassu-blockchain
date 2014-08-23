@@ -83,8 +83,15 @@ function checkBalance(minConfirmations, callback) {
     data.confirmations = minConfirmations;
   }
 
-  authRequest('/address_balance', data, callback);
-};
+  authRequest('/address_balance', data, function(err, response) {
+    if (err) return callback(err);
+
+    if (response.error)
+      return callback(new Error(response.error));
+
+    callback(null, response);
+  });
+}
 
 exports.balance = function balance(callback) {
 

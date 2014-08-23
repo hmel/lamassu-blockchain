@@ -30,12 +30,13 @@ function authRequest(path, data, callback) {
   var options = {
     headers: {
       'User-Agent': 'Mozilla/4.0 (compatible; Lamassu ' + exports.NAME + ' node.js client)',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    json: true
+    json: true,
+    payload: querystring.stringify(data)
   };
 
-  var uri = API_ENDPOINT + pluginConfig.guid + path + '?' + querystring.stringify(data);
+  var uri = API_ENDPOINT + pluginConfig.guid + path;
 
   Wreck.post(uri, options, function(err, res, payload) {
     callback(err, payload);

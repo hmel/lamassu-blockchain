@@ -10,8 +10,6 @@ exports.NAME = 'Blockchain';
 exports.SUPPORTED_MODULES = ['wallet'];
 var API_ENDPOINT    = 'https://blockchain.info/merchant/';
 
-var SATOSHI_FACTOR  = 1e8;
-
 var pluginConfig = {};
 
 exports.config = function config(localConfig) {
@@ -42,7 +40,7 @@ function authRequest(path, data, callback) {
   Wreck.post(uri, options, function(err, res, payload) {
     callback(err, payload);
   });
-};
+}
 
 
 exports.sendBitcoins = function sendBitcoins(address, satoshis, fee, callback) {

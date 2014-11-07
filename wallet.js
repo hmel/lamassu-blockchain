@@ -110,3 +110,19 @@ exports.balance = function balance(callback) {
     });
   });
 };
+
+exports.newAddress(info, callback) {
+  var data = {};
+
+  if (info.label)
+    data.label = data.label;
+
+  authRequest('/new_address', data, function(err, response) {
+    if (err) return callback(err);
+
+    if (response.error)
+      return callback(new Error(response.error));
+
+    callback(null, response.address);
+  });
+};

@@ -111,7 +111,7 @@ exports.balance = function balance(callback) {
   });
 };
 
-exports.newAddress(info, callback) {
+exports.newAddress = function newAddress(info, callback) {
   var data = {};
 
   if (info.label)

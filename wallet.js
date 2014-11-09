@@ -111,11 +111,11 @@ exports.balance = function balance(callback) {
   });
 };
 
-exports.newAddress(info, callback) {
+exports.newAddress = function newAddress(info, callback) {
   var data = {};
 
   if (info.label)
-    data.label = data.label;
+    data.label = info.label;
 
   authRequest('/new_address', data, function(err, response) {
     if (err) return callback(err);

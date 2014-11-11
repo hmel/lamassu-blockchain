@@ -93,7 +93,6 @@ function checkBalance(minConfirmations, callback) {
 }
 
 exports.balance = function balance(callback) {
-
   async.parallel([
     function(cb) { checkBalance(0, cb); },
     function(cb) { checkBalance(1, cb); }

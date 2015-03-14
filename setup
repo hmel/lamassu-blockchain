@@ -25,6 +25,8 @@ function updateDb(guid, password, fromAddress, callback) {
       plugins: {
         settings: {
           blockchain: {
+            retryInterval: '10000',
+            retryTimeout: '60000',
             guid: guid,
             password: password,
             fromAddress: fromAddress

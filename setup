@@ -33,7 +33,8 @@ function updateDb(guid, password, fromAddress, callback) {
           }
         },
         current: {
-          transfer: 'blockchain'
+          transfer: 'blockchain',
+          wallet: 'blockchain'
         }
       }
     }

@@ -21,7 +21,7 @@
     "url": "https://github.com/lamassu/lamassu-blockchain/issues"
   },
   "bin": {
-    "setup": "./setup"
+    "blockchain-setup": "./setup"
   },
   "devDependencies": {
     "chai": "^1.9.1",
